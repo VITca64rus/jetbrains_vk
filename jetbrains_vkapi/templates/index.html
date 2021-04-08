@@ -5,6 +5,12 @@
     <title>Индекс</title>
 </head>
 <body>
-Индекс страница
+<form method="POST">
+                {% csrf_token %}
+                <table class="info">
+                    {{ form }}
+                </table>
+                <input type="submit" value="Показать анализ" >
+            </form>
 </body>
 </html>
