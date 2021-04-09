@@ -2,6 +2,7 @@ from django.shortcuts import render
 from datetime import datetime
 from .forms import DomainForm
 import vk
+from jetbrains_vk.models import Choice
 
 def index(request):
     if request.method == "POST":
