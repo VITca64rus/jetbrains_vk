@@ -22,17 +22,49 @@ def index(request):
             for wall in wall['items']:
                 id_posts.append(wall['id'])
 
-        # Получаю все комментарии поста
+
+        #Получаю все посты
         for id_post in id_posts:
-            all_comments_post = []
+            print('id_post', id_post)
+
             offset_comments = 0
-            comments = api.wall.getComments(owner_id=int('-{}'.format(domain)), post_id=id_post, count=1, v=5.71)
-            count_comments = int (comments ['count'])
-            while count_comments>len(all_comments_post):
-                comments = api.wall.getComments (owner_id=int ('-{}'.format (domain)), offset=offset_comments, post_id=id_post, count=100, v=5.71)
+            all_comments = []
+            count_comments = 1
+            while count_comments > len(all_comments):
+                comments = api.wall.getComments(owner_id=int('-{}'.format(domain)), post_id=id_post, offset=offset_comments, need_likes=1,
+                                                count=100, v=5.91)
                 offset_comments += 100
+                count_comments = comments['count']
                 for comment in comments['items']:
-                    all_comments_post.append([comment['from_id'], comment['likes']['count'], comment['date']])
+                    try:
+                        all_comments.append([comment['from_id'], comment['likes']['count'], comment['date']])
+                    except:
+                        all_comments.append (['-', 0, comment ['date']])
+                    #print('comments',[comment['from_id'], comment['likes']['count'], comment['date']])
+                    id_comment=comment['id']
+                    count_threads = 1
+                    offset_threads = 0
+                    len_before_threads=len(all_comments)
+                    while count_threads > len(all_comments)-len_before_threads:
+                        print(count_threads+len(all_comments),len(all_comments))
+                        threads = api.wall.getComments(owner_id=int('-{}'.format(domain)), post_id=id_post, offset=offset_threads, need_likes=1,
+                                                        count=10, comment_id=id_comment, v=5.91)
+                        offset_threads += 10
+                        count_threads = threads['count']
+                        for thread in threads['items']:
+                            all_comments.append ([thread ['from_id'], thread ['likes'] ['count'], thread ['date']])
+                            print('threads',[thread ['from_id'], thread ['likes'] ['count'], thread ['date']])
+
+
+            #Загружаю все комментарии поста в БД
+            print('НАЧАЛ ЗАГРУЗКУ В БД')
+            comments_bd = Choice()
+            for comment_ in all_comments:
+                comments_bd.id_user = comment_[0]
+                comments_bd.date = comment_[2]
+                comments_bd.likes_count = comment_[1]
+                comments_bd.save()
+
 
         domainform = DomainForm ()
         return render (request, "index.html", {"form": domainform})
