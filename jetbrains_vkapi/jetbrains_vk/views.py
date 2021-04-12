@@ -3,7 +3,7 @@ from datetime import datetime
 from .forms import DomainForm
 import vk
 from jetbrains_vk.models import Choice
-from django.db.models import Count
+from django.db.models import Count, Sum
 import matplotlib.pyplot as plt
 
 def index(request):
@@ -70,17 +70,34 @@ def index(request):
                 comments_bd.save()
 """
         #Делаю запросы к БД строю графики
+
+        #Вытаскиваю инфу из БД для графика - Пользователи с наибольшим количеством комментариев
         user_countcomment = Choice.objects.values ('id_user').annotate(total=Count('id'))
         user=[]
         count=[]
         for user_count in user_countcomment:
             user.append(user_count['id_user'])
             count.append((user_count['total']))
-        plt.bar(user, count)
-        plt.xlabel('id пользователей')
-        plt.ylabel('кол-во комментариев')
-        plt.title('Пользователи с наибольшим количеством комментариев')
-        plt.show()
+
+        # Вытаскиваю инфу из БД для графика -  Пользователи с наибольшим количеством лайков
+        user_countlikes = Choice.objects.values ('id_user').annotate (total=Sum ('likes_count'))
+        user1 = []
+        count1 = []
+        for user_count in user_countlikes:
+            user1.append (user_count ['id_user'])
+            count1.append ((user_count ['total']))
+
+        fig = plt.figure ()
+        ax_1 = fig.add_subplot (2, 2, 1)
+        ax_2 = fig.add_subplot (2, 2, 2)
+
+        ax_1.set (title='Пользователи с наибольшим количеством комментариев',xlabel='id пользователей',
+                  ylabel='Кол-во комментариев')
+        ax_2.set (title='Пользователи с наибольшим количеством лайков', xlabel='id пользователей',
+                  ylabel='Кол-во лайков')
+        ax_1.bar(user,count)
+        ax_2.bar(user1,count1)
+        plt.show ()
 
         domainform = DomainForm ()
         return render (request, "index.html", {"form": domainform})
