@@ -3,13 +3,17 @@ from datetime import datetime
 from .forms import DomainForm
 import vk
 from jetbrains_vk.models import Choice
+from django.db.models import Count
+import matplotlib.pyplot as plt
 
 def index(request):
+
     if request.method == "POST":
         domain = request.POST.get ("domain")
 
         session = vk.Session (access_token='723789a4723789a4723789a4037240c0a577237723789a4125960cfa0d6d1f20e095818')
         api = vk.API (session)
+        """
 
         # Получаю массив id_posts с ид всех постов сообщества/человека
         wall=api.wall.get(owner_id=int('-{}'.format(domain)),count=1,v=5.71)
@@ -23,7 +27,7 @@ def index(request):
                 id_posts.append(wall['id'])
 
 
-        #Получаю все посты
+        #Получаю все комментарии по каждому посту
         for id_post in id_posts:
             print('id_post', id_post)
 
@@ -64,7 +68,19 @@ def index(request):
                 comments_bd.date = comment_[2]
                 comments_bd.likes_count = comment_[1]
                 comments_bd.save()
-
+"""
+        #Делаю запросы к БД строю графики
+        user_countcomment = Choice.objects.values ('id_user').annotate(total=Count('id'))
+        user=[]
+        count=[]
+        for user_count in user_countcomment:
+            user.append(user_count['id_user'])
+            count.append((user_count['total']))
+        plt.bar(user, count)
+        plt.xlabel('id пользователей')
+        plt.ylabel('кол-во комментариев')
+        plt.title('Пользователи с наибольшим количеством комментариев')
+        plt.show()
 
         domainform = DomainForm ()
         return render (request, "index.html", {"form": domainform})
