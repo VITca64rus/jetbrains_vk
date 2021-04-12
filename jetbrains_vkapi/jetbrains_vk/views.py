@@ -5,6 +5,7 @@ import vk
 from jetbrains_vk.models import Choice
 from django.db.models import Count, Sum
 import matplotlib.pyplot as plt
+import time
 
 def index(request):
 
@@ -13,7 +14,7 @@ def index(request):
 
         session = vk.Session (access_token='723789a4723789a4723789a4037240c0a577237723789a4125960cfa0d6d1f20e095818')
         api = vk.API (session)
-        """
+
 
         # Получаю массив id_posts с ид всех постов сообщества/человека
         wall=api.wall.get(owner_id=int('-{}'.format(domain)),count=1,v=5.71)
@@ -65,10 +66,12 @@ def index(request):
             comments_bd = Choice()
             for comment_ in all_comments:
                 comments_bd.id_user = comment_[0]
-                comments_bd.date = comment_[2]
+                comments_bd.date = time.strftime("%D", time.localtime(int(comment_[2])))
                 comments_bd.likes_count = comment_[1]
                 comments_bd.save()
-"""
+
+      #  print(time.strftime("%D", time.localtime(int('1284101485'))))
+
         #Делаю запросы к БД строю графики
 
         #Вытаскиваю инфу из БД для графика - Пользователи с наибольшим количеством комментариев
