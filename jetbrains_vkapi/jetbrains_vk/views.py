@@ -131,6 +131,8 @@ def graph(request):
     ax_3.set_xticklabels (day, rotation=90)
     ax_4.plot (day1, count_user1)
     ax_4.set_xticklabels (day1, rotation=90)
+
+    plt.tight_layout ()
     plt.show ()
     domainform = DomainForm ()
     return render (request, "index.html", {"form": domainform})
