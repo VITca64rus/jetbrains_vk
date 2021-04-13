@@ -19,6 +19,7 @@ from jetbrains_vk import views
 from django.urls import include
 
 urlpatterns = [
+    url('graph', views.graph, name='graph'),
     url('', views.index, name='index'),
     url(r'^admin/', admin.site.urls),
 ]
