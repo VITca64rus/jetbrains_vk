@@ -6,8 +6,10 @@ from jetbrains_vk.models import Choice
 from django.db.models import Count, Sum
 import matplotlib.pyplot as plt
 import time
+from django.http import HttpResponse, JsonResponse
 
 def index(request):
+
     if request.method == "POST":
         domain = request.POST.get ("domain")
 
@@ -82,7 +84,7 @@ def graph(request):
     user = []
     count = []
     for user_count in user_countcomment:
-        user.append (user_count ['id_user'])
+        user.append ('id ' + str(user_count ['id_user']))
         count.append ((user_count ['total']))
 
     # Вытаскиваю инфу из БД для графика -  Пользователи с наибольшим количеством лайков
@@ -109,6 +111,14 @@ def graph(request):
         day1.append (day_count ['date'])
         count_user1.append (day_count ['total'])
 
+    res={
+        'first': [user, count],
+        'second': [user1, count1],
+        'third': [day, count_comm],
+        'four': [day1, count_user1]
+    }
+    return JsonResponse(res, safe=False)
+    """
     fig = plt.figure ()
     ax_1 = fig.add_subplot (2, 2, 1)
     ax_2 = fig.add_subplot (2, 2, 2)
@@ -134,5 +144,26 @@ def graph(request):
 
     plt.tight_layout ()
     plt.show ()
+    """
+
+    """
+    
+function eer(){
+    var lineDiv = document.getElementById('line-chart');
+    var traceA = {
+        x: [1, 2, 3, 4, 16, 17, 26],
+        y: [1, 40, 9, 60, 4, 20, 10],
+        type: 'scatter'
+    };
+
+    var data = [traceA];
+
+    var layout = {
+      title:'A Line Chart in Plotly'
+    };
+
+    Plotly.plot( lineDiv, data, layout );
+};
+    """
     domainform = DomainForm ()
     return render (request, "index.html", {"form": domainform})
