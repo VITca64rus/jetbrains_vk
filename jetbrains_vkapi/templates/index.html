@@ -3,11 +3,13 @@
     <head>
         <meta charset="UTF-8">
         <title>Главная страница</title>
+        {% load static %}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
         <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <script type="text/javascript" src="https://cdn.plot.ly/plotly-1.9.0.min.js"></script>
+        <script src="{% static 'js/script.js' %}"></script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -40,36 +42,5 @@
         <div id="graph2"></div>
         <div id="graph3"></div>
         <div id="graph4"></div>
-
-        <script>
-            function Draw(name_div, data_x, data_y,title,xax,yax){
-                var barDiv = document.getElementById(name_div);
-                    var traceA = {
-                        x: data_x,
-                        y: data_y,
-                        type: 'bar'
-                    };
-                    var dat = [traceA];
-                    var layout = {
-                        title: title,
-                        xaxis: {title: xax},
-                        yaxis: {title: yax }
-                    };
-                    Plotly.plot( barDiv, dat, layout );
-            }
-
-            function Analitic() {
-                $.getJSON("{% url 'graph' %}", function(data){
-                    Draw('graph1', data['first'][0], data['first'][1],'Пользователи с наибольшим количеством комментариев',
-                         'id пользователей', 'кол-во комментариев')
-                    Draw('graph2', data['second'][0], data['second'][1],'Пользователи с наибольшим количеством лайков',
-                         'id пользователей', 'кол-во лайков')
-                    Draw('graph3', data['third'][0], data['third'][1],'Количество комментариев по дням',
-                         'Дата', 'кол-во комментариев')
-                    Draw('graph4', data['four'][0], data['four'][1],'Количество уникальных пользователей учавствующих в обсуждениях по дням',
-                         'Дата', 'кол-во пользователей')
-                });
-            };
-        </script>
     </body>
 </html>
