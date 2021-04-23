@@ -10,6 +10,7 @@ from django.http import HttpResponse, JsonResponse
 def index(request):
 
     if request.method == "POST":
+        Choice.objects.all ().delete ()
         domain = request.POST.get ("domain")
 
         session = vk.Session (access_token='723789a4723789a4723789a4037240c0a577237723789a4125960cfa0d6d1f20e095818')
@@ -32,6 +33,7 @@ def index(request):
             offset_comments = 0
             all_comments = []
             count_comments = 1
+
             while count_comments > len(all_comments):
                 comments = api.wall.getComments(owner_id=int('-{}'.format(domain)), post_id=id_post, offset=offset_comments, need_likes=1,
                                                 count=100, v=5.91)
