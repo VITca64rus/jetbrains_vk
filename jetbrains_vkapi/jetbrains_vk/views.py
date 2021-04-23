@@ -4,7 +4,6 @@ from .forms import DomainForm
 import vk
 from jetbrains_vk.models import Choice
 from django.db.models import Count, Sum
-import matplotlib.pyplot as plt
 import time
 from django.http import HttpResponse, JsonResponse
 
@@ -66,7 +65,8 @@ def index(request):
             for comment_ in all_comments:
                 comments_bd = Choice ()
                 comments_bd.id_user = comment_[0]
-                comments_bd.date = time.strftime("%D", time.localtime(int(comment_[2])))
+                print(time.strftime("%Y/%m/%d", time.localtime(int(comment_[2]))))
+                comments_bd.date = time.strftime("%Y-%m-%d", time.localtime(int(comment_[2])))
                 comments_bd.likes_count = comment_[1]
                 comments_bd.save()
 
