@@ -1,3 +1,11 @@
+$(document).ready(function () {
+    document.getElementById('status').style.display = 'none';
+});
+
+function load(){
+    document.getElementById('status').style.display = 'block';
+}
+
  function Draw(name_div, data_x, data_y,title,xax,yax){
                 var barDiv = document.getElementById(name_div);
                     var traceA = {
