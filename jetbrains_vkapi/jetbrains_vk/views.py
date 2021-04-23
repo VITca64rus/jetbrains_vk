@@ -92,7 +92,7 @@ def graph(request):
     user1 = []
     count1 = []
     for user_count in user_countlikes:
-        user1.append (user_count ['id_user'])
+        user1.append ('id ' + str(user_count ['id_user']))
         count1.append ((user_count ['total']))
 
     # Вытаскиваю инфу из БД для графика -  Кол-во комментариев по дням
@@ -118,52 +118,3 @@ def graph(request):
         'four': [day1, count_user1]
     }
     return JsonResponse(res, safe=False)
-    """
-    fig = plt.figure ()
-    ax_1 = fig.add_subplot (2, 2, 1)
-    ax_2 = fig.add_subplot (2, 2, 2)
-    ax_3 = fig.add_subplot (2, 2, 3)
-    ax_4 = fig.add_subplot (2, 2, 4)
-
-    ax_1.set (title='Пользователи с наибольшим количеством комментариев', xlabel='id пользователей',
-              ylabel='Кол-во комментариев')
-    ax_2.set (title='Пользователи с наибольшим количеством лайков', xlabel='id пользователей',
-              ylabel='Кол-во лайков')
-    ax_3.set (title='Количество комментариев по дням', xlabel='Дата',
-              ylabel='Кол-во комментариев')
-    ax_4.set (title='Количество уникальных пользователей учавствующих в обсуждениях по дням', xlabel='Дата',
-              ylabel='Кол-во пользователей')
-    ax_1.bar (user, count)
-    ax_1.set_xticklabels (user, rotation=90)
-    ax_2.bar (user1, count1)
-    ax_2.set_xticklabels (user1, rotation=90)
-    ax_3.plot (day, count_comm)
-    ax_3.set_xticklabels (day, rotation=90)
-    ax_4.plot (day1, count_user1)
-    ax_4.set_xticklabels (day1, rotation=90)
-
-    plt.tight_layout ()
-    plt.show ()
-    """
-
-    """
-    
-function eer(){
-    var lineDiv = document.getElementById('line-chart');
-    var traceA = {
-        x: [1, 2, 3, 4, 16, 17, 26],
-        y: [1, 40, 9, 60, 4, 20, 10],
-        type: 'scatter'
-    };
-
-    var data = [traceA];
-
-    var layout = {
-      title:'A Line Chart in Plotly'
-    };
-
-    Plotly.plot( lineDiv, data, layout );
-};
-    """
-    domainform = DomainForm ()
-    return render (request, "index.html", {"form": domainform})
