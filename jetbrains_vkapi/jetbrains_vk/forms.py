@@ -11,5 +11,17 @@ GEEKS_CHOICES =(
 class DomainForm(forms.Form):
     domain = forms.IntegerField(label='ID пользователя или сообщества')
     what = forms.ChoiceField (choices=GEEKS_CHOICES, label = 'Для чего используем даты?')
-    data1 = forms.DateField ( input_formats='%d/%m/%Y', label='Анализ с')
-    data2 = forms.DateField (input_formats='%d/%m/%Y', label='Анализ по')
+    data1 = forms.DateTimeField(
+        input_formats=['%d/%m/%Y %H:%M'],
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control datetimepicker-input',
+            'data-target': '#datetimepicker1'
+        })
+    )
+    data2 = forms.DateTimeField(label = 'Анализировать по',
+        input_formats=['%d/%m/%Y %H:%M'],
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control datetimepicker-input',
+            'data-target': '#datetimepicker2'
+        })
+    )
