@@ -30,10 +30,12 @@
                 </div>
             </div>
         </nav>
+        {% load crispy_forms_tags %}
+
         <form method="POST">
             {% csrf_token %}
             <table class="info">
-                {{ form }}
+                {{form|crispy}}
             </table>
             <input type="submit" value="Загрузить комментарии в БД" onclick="return load()" >
         </form>
