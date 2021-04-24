@@ -12,6 +12,9 @@ def index(request):
     if request.method == "POST":
         Choice.objects.all ().delete ()
         domain = request.POST.get ("domain")
+        data1 = request.POST.get ("data1")
+        data2 = request.POST.get ("data2")
+        what = request.POST.get ("what")
 
         session = vk.Session (access_token='723789a4723789a4723789a4037240c0a577237723789a4125960cfa0d6d1f20e095818')
         api = vk.API (session)
