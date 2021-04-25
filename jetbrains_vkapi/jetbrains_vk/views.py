@@ -27,15 +27,27 @@ def index(request):
         # Получаю массив id_posts с ид всех постов сообщества/человека
         try:
             wall=api.wall.get(owner_id=int('-{}'.format(domain)),count=1,v=5.71)
-        except vk.exceptions.VkAPIError:
-            domainform = DomainForm ()
-            return render (request, "index.html", {"form": domainform, 'fail': 'Некорректный id сообщества'})
+        except (vk.exceptions.VkAPIError, ValueError):
+            try:
+                wall=api.wall.get(owner_id=int('{}'.format(domain)),count=1,v=5.71)
+            except (vk.exceptions.VkAPIError, ValueError):
+                domainform = DomainForm ()
+                return render (request, "index.html", {"form": domainform, 'fail': 'Некорректный id сообщества'})
+
         count_wall=int(wall['count'])
         id_posts=[]
         offset_wall=0
         data_stat = True
         while (count_wall > len(id_posts)):
-            wall = api.wall.get (owner_id=int('-{}'.format(domain)), offset=offset_wall ,count=100, v=5.71)
+            try:
+                wall = api.wall.get (owner_id=int('-{}'.format(domain)), offset=offset_wall ,count=100, v=5.71)
+            except (vk.exceptions.VkAPIError, ValueError):
+
+                try:
+                    wall = api.wall.get (owner_id=int ('{}'.format (domain)), offset=offset_wall, count=100, v=5.71)
+                except (vk.exceptions.VkAPIError, ValueError):
+                    domainform = DomainForm ()
+                    return render (request, "index.html", {"form": domainform, 'fail': 'Некорректный id сообщества'})
             offset_wall += 100
             for wall in wall['items']:
                 if int(what)==2:
@@ -57,8 +69,17 @@ def index(request):
             count_comments = 1
 
             while count_comments > len(all_comments):
-                comments = api.wall.getComments(owner_id=int('-{}'.format(domain)), post_id=id_post, offset=offset_comments, need_likes=1,
-                                                count=100, v=5.91)
+                try:
+                    comments = api.wall.getComments(owner_id=int('-{}'.format(domain)), post_id=id_post, offset=offset_comments, need_likes=1,
+                                                    count=100, v=5.91)
+                except (vk.exceptions.VkAPIError, ValueError):
+                    pass
+                try:
+                    comments = api.wall.getComments(owner_id=int('{}'.format(domain)), post_id=id_post, offset=offset_comments, need_likes=1,
+                                                    count=100, v=5.91)
+                except (vk.exceptions.VkAPIError, ValueError):
+                    pass
+
                 offset_comments += 100
                 count_comments = comments['count']
                 for comment in comments['items']:
@@ -75,8 +96,16 @@ def index(request):
                     len_before_threads=len(all_comments)
                     while count_threads > len(all_comments)-len_before_threads:
                         print(count_threads+len(all_comments),len(all_comments))
-                        threads = api.wall.getComments(owner_id=int('-{}'.format(domain)), post_id=id_post, offset=offset_threads, need_likes=1,
+                        try:
+                            threads = api.wall.getComments(owner_id=int('-{}'.format(domain)), post_id=id_post, offset=offset_threads, need_likes=1,
                                                         count=10, comment_id=id_comment, v=5.91)
+                        except (vk.exceptions.VkAPIError, ValueError):
+                            pass
+                        try:
+                            threads = api.wall.getComments(owner_id=int('{}'.format(domain)), post_id=id_post, offset=offset_threads, need_likes=1,
+                                                        count=10, comment_id=id_comment, v=5.91)
+                        except (vk.exceptions.VkAPIError, ValueError):
+                            pass
                         offset_threads += 10
                         count_threads = threads['count']
                         for thread in threads['items']:
