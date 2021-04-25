@@ -12,9 +12,14 @@ def index(request):
     if request.method == "POST":
         Choice.objects.all ().delete ()
         domain = request.POST.get ("domain")
-        data1 = request.POST.get ("data1")
-        data2 = request.POST.get ("data2")
+        data1 = datetime.strptime(request.POST.get ("data1"), '%m/%d/%Y %H:%M %p')
+        data2 = datetime.strptime(request.POST.get ("data2"), '%m/%d/%Y %H:%M %p')
+        data1_stamp = int(data1.timestamp())
+        data2_stamp = int(data2.timestamp())
         what = request.POST.get ("what")
+        print(domain,data1,data2,what)
+        domainform = DomainForm ()
+
 
         session = vk.Session (access_token='723789a4723789a4723789a4037240c0a577237723789a4125960cfa0d6d1f20e095818')
         api = vk.API (session)
@@ -24,11 +29,21 @@ def index(request):
         count_wall=int(wall['count'])
         id_posts=[]
         offset_wall=0
-        while count_wall > len(id_posts):
+        data_stat = True
+        while (count_wall > len(id_posts)):
             wall = api.wall.get (owner_id=int('-{}'.format(domain)), offset=offset_wall ,count=100, v=5.71)
             offset_wall += 100
             for wall in wall['items']:
-                id_posts.append(wall['id'])
+                if int(what)==2:
+                    print('what==2')
+                    print(int(wall['date']),'>',data1_stamp,'and',int(wall['date']),'<',data2_stamp)
+                    if int(wall['date'])>data1_stamp and int(wall['date'])<data2_stamp:
+                        id_posts.append (wall ['id'])
+                        print(id_posts)
+                    else:
+                        count_wall -= 1
+                else:
+                    id_posts.append (wall ['id'])
 
         #Получаю все комментарии по каждому посту
         for id_post in id_posts:
@@ -80,6 +95,7 @@ def index(request):
     else:
         domainform = DomainForm ()
         return render (request, "index.html", {"form": domainform})
+
 
 def graph(request):
     # Делаю запросы к БД строю графики

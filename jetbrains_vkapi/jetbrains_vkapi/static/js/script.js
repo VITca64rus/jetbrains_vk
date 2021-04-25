@@ -34,13 +34,3 @@ function load(){
                          'Дата', 'кол-во пользователей')
                 });
             };
-  $(function () {
-    $("#datetimepicker1").datetimepicker({
-      format: 'DD/MM/YYYY HH:mm',
-    });
-  });
-  $(function () {
-    $("#datetimepicker2").datetimepicker({
-      format: 'DD/MM/YYYY HH:mm',
-    });
-  });

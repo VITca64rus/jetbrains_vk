@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+USE_TZ = True
+TIME_ZONE = 'Europe/Moscow'
 
 # Application definition
 
