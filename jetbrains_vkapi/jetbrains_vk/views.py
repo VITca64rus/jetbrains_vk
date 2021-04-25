@@ -25,7 +25,11 @@ def index(request):
         api = vk.API (session)
 
         # Получаю массив id_posts с ид всех постов сообщества/человека
-        wall=api.wall.get(owner_id=int('-{}'.format(domain)),count=1,v=5.71)
+        try:
+            wall=api.wall.get(owner_id=int('-{}'.format(domain)),count=1,v=5.71)
+        except vk.exceptions.VkAPIError:
+            domainform = DomainForm ()
+            return render (request, "index.html", {"form": domainform, 'fail': 'Некорректный id сообщества'})
         count_wall=int(wall['count'])
         id_posts=[]
         offset_wall=0

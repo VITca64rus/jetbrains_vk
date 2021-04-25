@@ -55,6 +55,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-2"></div>
+                <div class="col-8">{{fail}}</div>
+                <div class="col-2" role="alert"></div>
+            </div>
+            <div class="row">
+                <div class="col-2"></div>
                 <div class="col-8">
                     <form method="POST">
                         {% csrf_token %}
