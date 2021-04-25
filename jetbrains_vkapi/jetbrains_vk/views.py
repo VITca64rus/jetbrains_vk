@@ -58,6 +58,7 @@ def index(request):
                 offset_comments += 100
                 count_comments = comments['count']
                 for comment in comments['items']:
+
                     print(comment)
                     try:
                         all_comments.append([comment['from_id'], comment['likes']['count'], comment['date']])
@@ -83,12 +84,21 @@ def index(request):
             print(all_comments)
             #comments_bd = Choice()
             for comment_ in all_comments:
-                comments_bd = Choice ()
-                comments_bd.id_user = comment_[0]
-                print(time.strftime("%Y/%m/%d", time.localtime(int(comment_[2]))))
-                comments_bd.date = time.strftime("%Y-%m-%d", time.localtime(int(comment_[2])))
-                comments_bd.likes_count = comment_[1]
-                comments_bd.save()
+                if int(what) == 3:
+                    if int(comment_[2])>data1_stamp and int(comment_[2])<data2_stamp:
+                        comments_bd = Choice ()
+                        comments_bd.id_user = comment_[0]
+                        print(time.strftime("%Y/%m/%d", time.localtime(int(comment_[2]))))
+                        comments_bd.date = time.strftime("%Y-%m-%d", time.localtime(int(comment_[2])))
+                        comments_bd.likes_count = comment_[1]
+                        comments_bd.save()
+                else:
+                    comments_bd = Choice ()
+                    comments_bd.id_user = comment_ [0]
+                    print (time.strftime ("%Y/%m/%d", time.localtime (int (comment_ [2]))))
+                    comments_bd.date = time.strftime ("%Y-%m-%d", time.localtime (int (comment_ [2])))
+                    comments_bd.likes_count = comment_ [1]
+                    comments_bd.save ()
 
         domainform = DomainForm ()
         return render (request, "index.html", {"form": domainform})
