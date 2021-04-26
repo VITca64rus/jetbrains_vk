@@ -12,13 +12,18 @@ def index(request):
     if request.method == "POST":
         Choice.objects.all ().delete ()
         domain = request.POST.get ("domain")
-        data1 = datetime.strptime(request.POST.get ("data1"), '%m/%d/%Y %H:%M %p')
-        data2 = datetime.strptime(request.POST.get ("data2"), '%m/%d/%Y %H:%M %p')
-        data1_stamp = int(data1.timestamp())
-        data2_stamp = int(data2.timestamp())
         what = request.POST.get ("what")
-        print(domain,data1,data2,what)
-        domainform = DomainForm ()
+        if int(what) in [2,3]:
+            try:
+                data1 = datetime.strptime(request.POST.get ("data1"), '%m/%d/%Y %H:%M %p')
+                data2 = datetime.strptime(request.POST.get ("data2"), '%m/%d/%Y %H:%M %p')
+                data1_stamp = int(data1.timestamp())
+                data2_stamp = int(data2.timestamp())
+                print(domain,data1,data2,what)
+            except:
+                domainform = DomainForm ()
+                return render (request, "index.html", {"form": domainform, 'fail': 'Некорректные даты'})
+
 
 
         session = vk.Session (access_token='723789a4723789a4723789a4037240c0a577237723789a4125960cfa0d6d1f20e095818')
